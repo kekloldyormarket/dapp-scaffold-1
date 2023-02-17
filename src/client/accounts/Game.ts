@@ -1,89 +1,70 @@
 import { PublicKey, Connection } from "@solana/web3.js"
 import BN from "bn.js" // eslint-disable-line @typescript-eslint/no-unused-vars
 import * as borsh from "@project-serum/borsh" // eslint-disable-line @typescript-eslint/no-unused-vars
+import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
 export interface GameFields {
-  over: boolean
-  ss: BN
-  startTime: BN
-  crashTime: BN
-  wagers: BN
-  numusers: number
-  authority: PublicKey
-  lastAward: BN
-  avec: Array<Array<number>>
-  onecount: number
-  zerocount: number
-  twocount: number
-  wen: string
+  bump: number
+  board: Array<Array<types.TeamKind>>
+  isOpen: boolean
+  numPieces: BN
+  numPlayersTotal: BN
+  numPlayersRock: BN
+  numPlayersPaper: BN
+  numPlayersScissors: BN
+  startedAt: BN
 }
 
 export interface GameJSON {
-  over: boolean
-  ss: string
-  startTime: string
-  crashTime: string
-  wagers: string
-  numusers: number
-  authority: string
-  lastAward: string
-  avec: Array<Array<number>>
-  onecount: number
-  zerocount: number
-  twocount: number
-  wen: string
+  bump: number
+  board: Array<Array<types.TeamJSON>>
+  isOpen: boolean
+  numPieces: string
+  numPlayersTotal: string
+  numPlayersRock: string
+  numPlayersPaper: string
+  numPlayersScissors: string
+  startedAt: string
 }
 
 export class Game {
-  readonly over: boolean
-  readonly ss: BN
-  readonly startTime: BN
-  readonly crashTime: BN
-  readonly wagers: BN
-  readonly numusers: number
-  readonly authority: PublicKey
-  readonly lastAward: BN
-  readonly avec: Array<Array<number>>
-  readonly onecount: number
-  readonly zerocount: number
-  readonly twocount: number
-  readonly wen: string
+  readonly bump: number
+  readonly board: Array<Array<types.TeamKind>>
+  readonly isOpen: boolean
+  readonly numPieces: BN
+  readonly numPlayersTotal: BN
+  readonly numPlayersRock: BN
+  readonly numPlayersPaper: BN
+  readonly numPlayersScissors: BN
+  readonly startedAt: BN
 
   static readonly discriminator = Buffer.from([
     27, 90, 166, 125, 74, 100, 121, 18,
   ])
 
   static readonly layout = borsh.struct([
-    borsh.bool("over"),
-    borsh.u64("ss"),
-    borsh.i64("startTime"),
-    borsh.i64("crashTime"),
-    borsh.u64("wagers"),
-    borsh.u8("numusers"),
-    borsh.publicKey("authority"),
-    borsh.u64("lastAward"),
-    borsh.vec(borsh.vec(borsh.u8()), "avec"),
-    borsh.u8("onecount"),
-    borsh.u8("zerocount"),
-    borsh.u8("twocount"),
-    borsh.str("wen"),
+    borsh.u8("bump"),
+    borsh.vec(borsh.vec(borsh.option(types.Team.layout())), "board"),
+    borsh.bool("isOpen"),
+    borsh.u64("numPieces"),
+    borsh.u64("numPlayersTotal"),
+    borsh.u64("numPlayersRock"),
+    borsh.u64("numPlayersPaper"),
+    borsh.u64("numPlayersScissors"),
+    borsh.i64("startedAt"),
   ])
 
   constructor(fields: GameFields) {
-    this.over = fields.over
-    this.ss = fields.ss
-    this.startTime = fields.startTime
-    this.crashTime = fields.crashTime
-    this.wagers = fields.wagers
-    this.numusers = fields.numusers
-    this.authority = fields.authority
-    this.lastAward = fields.lastAward
-    this.avec = fields.avec
-    this.onecount = fields.onecount
-    this.zerocount = fields.zerocount
-    this.twocount = fields.twocount
-    this.wen = fields.wen
+    this.bump = fields.bump
+    this.board = fields.board
+    this.isOpen = fields.isOpen
+    this.numPieces = fields.numPieces
+    this.numPlayersTotal = fields.numPlayersTotal
+    this.numPlayersRock = fields.numPlayersRock
+    this.numPlayersPaper = fields.numPlayersPaper
+    this.numPlayersScissors = fields.numPlayersScissors
+    this.startedAt = fields.startedAt
   }
 
   static async fetch(c: Connection, address: PublicKey): Promise<Game | null> {
@@ -125,55 +106,54 @@ export class Game {
     const dec = Game.layout.decode(data.slice(8))
 
     return new Game({
-      over: dec.over,
-      ss: dec.ss,
-      startTime: dec.startTime,
-      crashTime: dec.crashTime,
-      wagers: dec.wagers,
-      numusers: dec.numusers,
-      authority: dec.authority,
-      lastAward: dec.lastAward,
-      avec: dec.avec,
-      onecount: dec.onecount,
-      zerocount: dec.zerocount,
-      twocount: dec.twocount,
-      wen: dec.wen,
+      bump: dec.bump,
+      board: dec.board.map(
+        (
+          item: any /* eslint-disable-line @typescript-eslint/no-explicit-any */
+        ) =>
+          item.map(
+            (
+              item: any /* eslint-disable-line @typescript-eslint/no-explicit-any */
+            ) => types.Team.fromDecoded(item)
+          )
+      ),
+      isOpen: dec.isOpen,
+      numPieces: dec.numPieces,
+      numPlayersTotal: dec.numPlayersTotal,
+      numPlayersRock: dec.numPlayersRock,
+      numPlayersPaper: dec.numPlayersPaper,
+      numPlayersScissors: dec.numPlayersScissors,
+      startedAt: dec.startedAt,
     })
   }
 
   toJSON(): GameJSON {
     return {
-      over: this.over,
-      ss: this.ss.toString(),
-      startTime: this.startTime.toString(),
-      crashTime: this.crashTime.toString(),
-      wagers: this.wagers.toString(),
-      numusers: this.numusers,
-      authority: this.authority.toString(),
-      lastAward: this.lastAward.toString(),
-      avec: this.avec,
-      onecount: this.onecount,
-      zerocount: this.zerocount,
-      twocount: this.twocount,
-      wen: this.wen,
+      bump: this.bump,
+      board: this.board.map((item) => item.map((item) => item.toJSON())),
+      isOpen: this.isOpen,
+      numPieces: this.numPieces.toString(),
+      numPlayersTotal: this.numPlayersTotal.toString(),
+      numPlayersRock: this.numPlayersRock.toString(),
+      numPlayersPaper: this.numPlayersPaper.toString(),
+      numPlayersScissors: this.numPlayersScissors.toString(),
+      startedAt: this.startedAt.toString(),
     }
   }
 
   static fromJSON(obj: GameJSON): Game {
     return new Game({
-      over: obj.over,
-      ss: new BN(obj.ss),
-      startTime: new BN(obj.startTime),
-      crashTime: new BN(obj.crashTime),
-      wagers: new BN(obj.wagers),
-      numusers: obj.numusers,
-      authority: new PublicKey(obj.authority),
-      lastAward: new BN(obj.lastAward),
-      avec: obj.avec,
-      onecount: obj.onecount,
-      zerocount: obj.zerocount,
-      twocount: obj.twocount,
-      wen: obj.wen,
+      bump: obj.bump,
+      board: obj.board.map((item) =>
+        item.map((item) => types.Team.fromJSON(item))
+      ),
+      isOpen: obj.isOpen,
+      numPieces: new BN(obj.numPieces),
+      numPlayersTotal: new BN(obj.numPlayersTotal),
+      numPlayersRock: new BN(obj.numPlayersRock),
+      numPlayersPaper: new BN(obj.numPlayersPaper),
+      numPlayersScissors: new BN(obj.numPlayersScissors),
+      startedAt: new BN(obj.startedAt),
     })
   }
 }

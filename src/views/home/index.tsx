@@ -27,6 +27,9 @@ import pkg from '../../../package.json';
 
 // Store
 import useUserSOLBalanceStore from '../../stores/useUserSOLBalanceStore';
+import { movePiece, newGame, newPiece, newPlayer } from 'client/instructions';
+import { Scissors, Rock, Paper } from 'client/types/Team';
+import { Player } from 'client/accounts';
 
 export const HomeView: FC = ({ }) => {
   let [gameState, setGameState] = useState<any>()
@@ -49,7 +52,7 @@ export const HomeView: FC = ({ }) => {
   });
 
   let game = (PublicKey.findProgramAddressSync(
-    [Buffer.from("gamegame"),new PublicKey("ELwwZrkym1goZ8skiC92z3uviG84sNVHFWGuAW66W5uG").toBuffer()]
+    [Buffer.from("game")]
   , PROGRAM_ID))[0]/*
   */
   useEffect(() => {
@@ -60,14 +63,38 @@ export const HomeView: FC = ({ }) => {
         
         if (ahh){
           console.log(ahh)
+          console.log(ahh.numPlayersPaper.toNumber())
          
-          setGrid(ahh.avec); 
+          setGrid(ahh.board); 
         }
       }, 2000)
     }
     }, [game])
 
-  const [currentOption, setCurrentOption] = useState('rock');
+  const [currentOption, setCurrentOption] = useState();
+  useEffect(() => {
+    if (wallet.connected && currentOption){
+    setTimeout(async function(){
+      console.log(currentOption)
+      let player = (PublicKey.findProgramAddressSync(
+        // @ts-ignore
+        [Buffer.from("player"),wallet.publicKey.toBuffer()]
+      , PROGRAM_ID))[0]
+      let hmm = await newPlayer({team: currentOption == 'scissors' ? new Scissors : currentOption == 'paper' ?  new Paper :  new Rock},
+        { authority: wallet.publicKey, game: game, player, systemProgram: SystemProgram.programId })
+        const additionalComputeBudgetInstruction =
+        ComputeBudgetProgram.requestUnits({
+            units: 2100000,
+            additionalFee: 0,
+    });
+      let atx = new Transaction().add(additionalComputeBudgetInstruction).add(hmm)
+       atx.feePayer = wallet.publicKey
+    
+  atx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash
+       await provider.sendAndConfirm(atx, [], {skipPreflight: true})
+      }, 2000)
+    }
+  }, [currentOption])
   function ClickableBoard() {
       const handleClick =async(row, col) => {
   
@@ -97,14 +124,15 @@ export const HomeView: FC = ({ }) => {
     newGrid[row][col] = team; // Set the clicked cell to a new value
 const wager = 1000
 let wen = new Date().getTime()
-  let user = (PublicKey.findProgramAddressSync(
+  let player = (PublicKey.findProgramAddressSync(
     // @ts-ignore
-    [Buffer.from("gamegame"),game.toBuffer(), wallet.publicKey.toBuffer(), Buffer.from(wen.toString())]
+    [Buffer.from("player"),wallet.publicKey.toBuffer()]
   , PROGRAM_ID))[0]
   const SEED_QUEUE = 'thread';
   var threadName = (Math.floor(Math.random()*9999999)).toString()
-  var [thread] = PublicKey.findProgramAddressSync(
-    [Buffer.from(SEED_QUEUE, 'utf-8'), wallet.publicKey.toBuffer(), Buffer.from(threadName, 'utf-8')],
+  var [thread] = PublicKey.findProgramAddressSync(   
+
+    [Buffer.from(SEED_QUEUE, 'utf-8'), game.toBuffer(),Buffer.from( (await Game.fetch(connection, game)).numPieces.toString())],
     CLOCKWORK_THREAD_PROGRAM_ID,
   );
   console.log(thread.toBase58())
@@ -117,14 +145,6 @@ let wen = new Date().getTime()
 
 const tx = new Transaction()//.add(tx4)
    
-  tx.add(SystemProgram.transfer({
-    /** Account that will transfer lamports */
-    fromPubkey: wallet.publicKey,
-    /** Account that will receive transferred lamports */
-    toPubkey: thread,
-    /** Amount of lamports to transfer */
-    lamports: 0.02 * 10 ** 9
-  }))
   console.log(team)
   console.log(team)
   
@@ -135,63 +155,37 @@ const tx = new Transaction()//.add(tx4)
   console.log(team)
   
   
-  const tx2 = await join( {wager:new anchor.BN( wager), wen:     (wen.toString() ),team,x:row,y:col },{
-    game:  game,
-      user: user,
-    authority: wallet.publicKey,
-    recentBlockhashes: SYSVAR_RECENT_BLOCKHASHES_PUBKEY,
-    systemProgram: SystemProgram.programId
-  });
-  const tx3 = await play( { wen:     (wen.toString() )},{
+  
+      console.log((await Game.fetch(connection, game)).numPieces.toNumber())
+  let piece = (PublicKey.findProgramAddressSync(
+    // @ts-ignore
+    [Buffer.from("piece"),( (await Game.fetch(connection, game)).numPieces.toArray('le', 8))]
+  , PROGRAM_ID))[0]
 
-    game: game,
+  
+  
+  const tx2 = await newPiece( {x:new anchor.BN(row),y:new anchor.BN(col) },{
+    authority: wallet.publicKey,
+    game,
+    piece,
+    player,
+    systemProgram: SystemProgram.programId,
     thread,
-    authority: wallet.publicKey,
-    user: user,
-    recentBlockhashes: SYSVAR_RECENT_BLOCKHASHES_PUBKEY
-  })
-  try {
-    const threadProgram = await new anchor.Program(
-      ThreadProgramIdl_v1_3_15,
-      CLOCKWORK_THREAD_PROGRAM_ID,
-      provider,
-
-      )
-      
-
-// create add compute budget Instruction
-const additionalComputeBudgetInstruction =
+    threadProgram: CLOCKWORK_THREAD_PROGRAM_ID  });
+    
+  
+    const additionalComputeBudgetInstruction =
     ComputeBudgetProgram.requestUnits({
         units: 2100000,
         additionalFee: 0,
 });
-    tx.add( additionalComputeBudgetInstruction).add( tx2)
-    tx.feePayer = wallet.publicKey 
-    tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash 
-    let hmm =  await provider.sendAndConfirm(tx, [],{skipPreflight: true, preflightCommitment: 'recent'})
-    console.log(hmm)
-      var magic = await threadProgram.methods
-    .threadCreate(
-      threadName,
+try {
+tx.add(additionalComputeBudgetInstruction)
+    tx.add(tx2)
+    tx.feePayer = wallet.publicKey
     
-      {
-        accounts: tx3.keys,
-        programId: new PublicKey(tx3.programId),
-        data: tx3.data,
-      },
-      {
-        cron: {schedule: "1 * * * * * *",skippable:false},
-        
-      },
-    )
-    .accounts({
-      authority: wallet.publicKey,
-      payer: wallet.publicKey,
-      thread,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc();
-
+    tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash
+         await provider.sendAndConfirm(tx, [], {skipPreflight: true})
   }
    catch (err){
     console.log(err)

@@ -1,4 +1,6 @@
-export { User } from "./User"
-export type { UserFields, UserJSON } from "./User"
+export { Player } from "./Player"
+export type { PlayerFields, PlayerJSON } from "./Player"
 export { Game } from "./Game"
 export type { GameFields, GameJSON } from "./Game"
+export { Piece } from "./Piece"
+export type { PieceFields, PieceJSON } from "./Piece"
