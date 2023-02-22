@@ -6,7 +6,7 @@ import { PROGRAM_ID } from "../programId"
 
 export interface GameFields {
   bump: number
-  board: Array<Array<types.TeamKind>>
+  board: Array<Array<number>>
   isOpen: boolean
   numPieces: BN
   numPlayersTotal: BN
@@ -18,7 +18,7 @@ export interface GameFields {
 
 export interface GameJSON {
   bump: number
-  board: Array<Array<types.TeamJSON>>
+  board: Array<Array<number>>
   isOpen: boolean
   numPieces: string
   numPlayersTotal: string
@@ -30,7 +30,7 @@ export interface GameJSON {
 
 export class Game {
   readonly bump: number
-  readonly board: Array<Array<types.TeamKind>>
+  readonly board: Array<Array<number>>
   readonly isOpen: boolean
   readonly numPieces: BN
   readonly numPlayersTotal: BN
@@ -45,7 +45,7 @@ export class Game {
 
   static readonly layout = borsh.struct([
     borsh.u8("bump"),
-    borsh.vec(borsh.vec(borsh.option(types.Team.layout())), "board"),
+    borsh.vec(borsh.vec(borsh.option(borsh.u8())), "board"),
     borsh.bool("isOpen"),
     borsh.u64("numPieces"),
     borsh.u64("numPlayersTotal"),
@@ -107,16 +107,7 @@ export class Game {
 
     return new Game({
       bump: dec.bump,
-      board: dec.board.map(
-        (
-          item: any /* eslint-disable-line @typescript-eslint/no-explicit-any */
-        ) =>
-          item.map(
-            (
-              item: any /* eslint-disable-line @typescript-eslint/no-explicit-any */
-            ) => types.Team.fromDecoded(item)
-          )
-      ),
+      board: dec.board,
       isOpen: dec.isOpen,
       numPieces: dec.numPieces,
       numPlayersTotal: dec.numPlayersTotal,
@@ -130,7 +121,7 @@ export class Game {
   toJSON(): GameJSON {
     return {
       bump: this.bump,
-      board: this.board.map((item) => item.map((item) => item.toJSON())),
+      board: this.board,
       isOpen: this.isOpen,
       numPieces: this.numPieces.toString(),
       numPlayersTotal: this.numPlayersTotal.toString(),
@@ -144,9 +135,7 @@ export class Game {
   static fromJSON(obj: GameJSON): Game {
     return new Game({
       bump: obj.bump,
-      board: obj.board.map((item) =>
-        item.map((item) => types.Team.fromJSON(item))
-      ),
+      board: obj.board,
       isOpen: obj.isOpen,
       numPieces: new BN(obj.numPieces),
       numPlayersTotal: new BN(obj.numPlayersTotal),

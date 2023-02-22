@@ -5,7 +5,7 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface NewPlayerArgs {
-  team: types.TeamKind
+  team: number
 }
 
 export interface NewPlayerAccounts {
@@ -28,7 +28,8 @@ export function newPlayer(args: NewPlayerArgs, accounts: NewPlayerAccounts) {
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {
-      team: args.team.toEncodable(),
+      team: args.team == 1 ? { Rock: {}} : args.team == 2 ? { Paper: {}} : 
+      args.team == 3 ? { Scissors: {}} : null
     },
     buffer
   )

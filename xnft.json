@@ -1,0 +1,21 @@
+{
+  "kind": "app",
+  "name": "RockPaperScissors", 
+  "version": "0.138.669",
+  "description": "the rules: rocket paper scissors",
+  "website": "https://twitter.com/STACCoverflow/status/1626437898856960000",
+"tag":  "game",
+  "royaltiesPercentage": 3,
+  "entrypoints": {
+   
+    "default": {
+      "web": "https://yourshit.gg"
+    }
+  },
+  "icon": {
+    "sm": "rocket.jpg",
+    "md": "rocket.jpg",
+    "lg": "rocket.jpg"
+
+  }
+}

@@ -1,2 +1,8 @@
-export { HomeView } from "./home";
-export { BasicsView } from "./basics";
+
+
+declare global {
+    interface Window {
+      xnft: any;
+    }
+  }
+  export { HomeView } from "./home";

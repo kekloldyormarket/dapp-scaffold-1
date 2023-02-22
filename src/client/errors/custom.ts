@@ -1,4 +1,8 @@
-export type CustomError = BoardPositionOccupied | InvalidBoardPosition | BadTeam
+export type CustomError =
+  | BoardPositionOccupied
+  | InvalidBoardPosition
+  | BadTeam
+  | BadMath
 
 export class BoardPositionOccupied extends Error {
   static readonly code = 6000
@@ -33,6 +37,17 @@ export class BadTeam extends Error {
   }
 }
 
+export class BadMath extends Error {
+  static readonly code = 6003
+  readonly code = 6003
+  readonly name = "BadMath"
+  readonly msg = "Bad math"
+
+  constructor(readonly logs?: string[]) {
+    super("6003: Bad math")
+  }
+}
+
 export function fromCode(code: number, logs?: string[]): CustomError | null {
   switch (code) {
     case 6000:
@@ -41,6 +56,8 @@ export function fromCode(code: number, logs?: string[]): CustomError | null {
       return new InvalidBoardPosition(logs)
     case 6002:
       return new BadTeam(logs)
+    case 6003:
+      return new BadMath(logs)
   }
 
   return null

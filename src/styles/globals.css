@@ -64,13 +64,25 @@ body {
 }
 
 .square {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   background-color: #1a1a1a;
   border: 1px solid #333;
   transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
+.clicked-4 {
+  background-color: #f88;
+  border-color: #333;
+}
+.clicked-5 {
+  background-color: #88f;
+  border-color: #333;
+}
+.clicked-6 {
+  background-color: #fff;
+  border-color: #333;
+}
 .clicked-1 {
   background-color: #f00;
   border-color: #333;

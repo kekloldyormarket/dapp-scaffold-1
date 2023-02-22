@@ -16,17 +16,23 @@ import { notify } from "../utils/notifications";
 import { NetworkConfigurationProvider, useNetworkConfiguration } from './NetworkConfigurationProvider';
 import dynamic from "next/dynamic";
 
+declare global {
+    interface Window {
+      xnft: any;
+    }
+  }
 const ReactUIWalletModalProviderDynamic = dynamic(
   async () =>
     (await import("@solana/wallet-adapter-react-ui")).WalletModalProvider,
   { ssr: false }
 );
 
+
 const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const { autoConnect } = useAutoConnect();
     const { networkConfiguration } = useNetworkConfiguration();
     const network = networkConfiguration as WalletAdapterNetwork;
-    const endpoint = "https://rpc.helius.xyz/?api-key=8913a285-a5ef-4c35-8d80-03fb276eff2f"
+    const endpoint = "https://solana-devnet.g.alchemy.com/v2/4q5fsmngz3snzir01s-znwatdfdndb9l"
 
     console.log(network);
 
@@ -39,10 +45,14 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
             new TorusWalletAdapter(),
             // new LedgerWalletAdapter(),
             // new SlopeWalletAdapter(),
+            // new MathWalletAdapter(),
+            /* show me cool shit */
+
+            
         ],
         [network]
     );
-
+        
     const onError = useCallback(
         (error: WalletError) => {
             notify({ type: 'error', message: error.message ? `${error.name}: ${error.message}` : error.name });

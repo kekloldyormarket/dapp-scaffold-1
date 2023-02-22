@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta httpequiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1.00001,viewport-fit=cover" />
+  <title>
+    xNFT
+  </title>
+  <style>
+    #root,
+    body,
+    html {
+      width: 100%;
+      -webkit-overflow-scrolling: touch;
+      margin: 0;
+      padding: 0;
+      min-height: 100%
+    }
+
+    #root {
+      flex-shrink: 0;
+      flex-basis: auto;
+      flex-grow: 1;
+      display: flex;
+      flex: 1
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      height: calc(100% + env(safe-area-inset-top))
+    }
+
+    body {
+      display: flex;
+      overflow-y: auto;
+      overscroll-behavior-y: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -ms-overflow-style: scrollbar;
+    }
+  </style>
+</head>
+
+<body><noscript>
+    <form action="" style="background-color:#fff;position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999">
+      <div style="font-size:18px;font-family:Helvetica,sans-serif;line-height:24px;margin:10%;width:80%">
+        <p>Oh no! It looks like JavaScript is not enabled in your browser.</p>
+        <p style="margin:20px 0"><button type="submit"
+            style="background-color:#4630eb;border-radius:100px;border:none;box-shadow:none;color:#fff;cursor:pointer;font-weight:700;line-height:20px;padding:6px 16px">Reload</button>
+        </p>
+      </div>
+    </form>
+  </noscript>
+  <div id="root"></div>
+  <script type="text/JavaScript">
+    !function(e){var a={};function o(r){if(a[r])return a[r].exports;var s=a[r]={i:r,l:!1,exports:{}};return e[r].call(s.exports,s,s.exports,o),s.l=!0,s.exports}o.m=e,o.c=a,o.d=function(e,a,r){o.o(e,a)||Object.defineProperty(e,a,{enumerable:!0,get:r})},o.r=function(e){"undefined"!==typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},o.t=function(e,a){if(1&a&&(e=o(e)),8&a)return e;if(4&a&&"object"===typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(o.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&a&&"string"!=typeof e)for(var s in e)o.d(r,s,function(a){return e[a]}.bind(null,s));return r},o.n=function(e){var a=e&&e.__esModule?function(){return e.default}:function(){return e};return o.d(a,"a",a),a},o.o=function(e,a){return Object.prototype.hasOwnProperty.call(e,a)},o.p="",o(o.s=0)}([function(e,a,o){e.exports=o(1)},function(e,a){throw new Error("Module build failed (from ./node_modules/@expo/webpack-config/node_modules/babel-loader/lib/index.js):\nSyntaxError: /home/stacc/dapp-scaffold/src/pages/_app.tsx: Missing semicolon. (11:7)\n\n\x1b[0m \x1b[90m  9 |\x1b[39m require(\x1b[32m'../styles/globals.css'\x1b[39m)\x1b[33m;\x1b[39m\x1b[0m\n\x1b[0m \x1b[90m 10 |\x1b[39m\x1b[0m\n\x1b[0m\x1b[31m\x1b[1m>\x1b[22m\x1b[39m\x1b[90m 11 |\x1b[39m declare global {\x1b[0m\n\x1b[0m \x1b[90m    |\x1b[39m        \x1b[31m\x1b[1m^\x1b[22m\x1b[39m\x1b[0m\n\x1b[0m \x1b[90m 12 |\x1b[39m   \x1b[36minterface\x1b[39m \x1b[33mWindow\x1b[39m {\x1b[0m\n\x1b[0m \x1b[90m 13 |\x1b[39m     xnft\x1b[33m:\x1b[39m any\x1b[33m;\x1b[39m\x1b[0m\n\x1b[0m \x1b[90m 14 |\x1b[39m   }\x1b[0m\n    at instantiate (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:64:32)\n    at constructor (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:362:12)\n    at Parser.raise (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:3254:19)\n    at Parser.semicolon (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:3625:10)\n    at Parser.parseExpressionStatement (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:13073:10)\n    at Parser.parseStatementContent (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:12678:19)\n    at Parser.parseStatementLike (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:12534:17)\n    at Parser.parseModuleItem (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:12518:17)\n    at Parser.parseBlockOrModuleBlockBody (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:13104:36)\n    at Parser.parseBlockBody (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:13097:10)\n    at Parser.parseProgram (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:12432:10)\n    at Parser.parseTopLevel (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:12422:25)\n    at Parser.parse (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:14234:10)\n    at parse (/home/stacc/dapp-scaffold/node_modules/@babel/parser/lib/index.js:14255:26)\n    at parser (/home/stacc/dapp-scaffold/node_modules/@expo/webpack-config/node_modules/@babel/core/lib/parser/index.js:54:34)\n    at parser.next (<anonymous>)")}]);
+  </script>
+</body>
+
+</html>

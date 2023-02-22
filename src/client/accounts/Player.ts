@@ -8,21 +8,27 @@ export interface PlayerFields {
   authority: PublicKey
   bump: number
   numPieces: BN
-  team: types.TeamKind
+  team: number
+  kills: BN
+  earnings: BN
 }
 
 export interface PlayerJSON {
   authority: string
   bump: number
   numPieces: string
-  team: types.TeamJSON
+  team:  number
+  kills: string
+  earnings: string
 }
 
 export class Player {
   readonly authority: PublicKey
   readonly bump: number
   readonly numPieces: BN
-  readonly team: types.TeamKind
+  readonly team: number
+  readonly kills: BN
+  readonly earnings: BN
 
   static readonly discriminator = Buffer.from([
     205, 222, 112, 7, 165, 155, 206, 218,
@@ -33,13 +39,17 @@ export class Player {
     borsh.u8("bump"),
     borsh.u64("numPieces"),
     types.Team.layout("team"),
+    borsh.u64("kills"),
+    borsh.u64("earnings"),
   ])
 
   constructor(fields: PlayerFields) {
     this.authority = fields.authority
     this.bump = fields.bump
     this.numPieces = fields.numPieces
-    this.team = fields.team
+    this.team = ( fields.team) 
+    this.kills = fields.kills
+    this.earnings = fields.earnings
   }
 
   static async fetch(
@@ -82,12 +92,13 @@ export class Player {
     }
 
     const dec = Player.layout.decode(data.slice(8))
-
     return new Player({
       authority: dec.authority,
       bump: dec.bump,
       numPieces: dec.numPieces,
-      team: types.Team.fromDecoded(dec.team),
+      team: dec.team.Rock ? 1 : dec.team.Paper ? 2 : dec.team.Scissors ? 3 : 0,
+      kills: dec.kills,
+      earnings: dec.earnings,
     })
   }
 
@@ -96,7 +107,9 @@ export class Player {
       authority: this.authority.toString(),
       bump: this.bump,
       numPieces: this.numPieces.toString(),
-      team: this.team.toJSON(),
+      team: this.team,
+      kills: this.kills.toString(),
+      earnings: this.earnings.toString(),
     }
   }
 
@@ -105,7 +118,9 @@ export class Player {
       authority: new PublicKey(obj.authority),
       bump: obj.bump,
       numPieces: new BN(obj.numPieces),
-      team: types.Team.fromJSON(obj.team),
+      team:(obj.team),
+      kills: new BN(obj.kills),
+      earnings: new BN(obj.earnings),
     })
   }
 }

@@ -12,11 +12,14 @@ export interface NewPieceArgs {
 export interface NewPieceAccounts {
   authority: PublicKey
   game: PublicKey
+  eg: PublicKey
   piece: PublicKey
   player: PublicKey
   systemProgram: PublicKey
   thread: PublicKey
   threadProgram: PublicKey
+  h1: PublicKey
+  h2: PublicKey
 }
 
 export const layout = borsh.struct([borsh.u64("x"), borsh.u64("y")])
@@ -25,11 +28,17 @@ export function newPiece(args: NewPieceArgs, accounts: NewPieceAccounts) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.authority, isSigner: false, isWritable: true },
     { pubkey: accounts.game, isSigner: false, isWritable: true },
+   // { pubkey: accounts.eg, isSigner: false, isWritable: true },
     { pubkey: accounts.piece, isSigner: false, isWritable: true },
     { pubkey: accounts.player, isSigner: false, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
     { pubkey: accounts.thread, isSigner: false, isWritable: true },
     { pubkey: accounts.threadProgram, isSigner: false, isWritable: false },
+    { pubkey: accounts.h1, isSigner: false, isWritable: true },
+    { pubkey: accounts.h2, isSigner: false, isWritable: true },/*
+    { pubkey: new PublicKey("So11111111111111111111111111111111111111112"), isSigner: false, isWritable: false },
+    { pubkey: new PublicKey("H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG"), isSigner: false, isWritable: false },
+    { pubkey: new PublicKey("H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG"),  isSigner: false, isWritable: false },*/
   ]
   const identifier = Buffer.from([136, 17, 68, 212, 182, 62, 108, 151])
   const buffer = Buffer.alloc(1000)

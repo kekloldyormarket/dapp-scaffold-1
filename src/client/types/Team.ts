@@ -4,7 +4,7 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import * as borsh from "@project-serum/borsh"
 
 export interface RockJSON {
-  kind: "Rock"
+  kind: 1
 }
 
 export class Rock {
@@ -14,20 +14,17 @@ export class Rock {
   readonly kind = "Rock"
 
   toJSON(): RockJSON {
-    return {
-      kind: "Rock",
-    }
+    // @ts-ignore
+    return 1
   }
 
   toEncodable() {
-    return {
-      Rock: {},
-    }
+    return 1
   }
 }
 
 export interface PaperJSON {
-  kind: "Paper"
+  kind: 2
 }
 
 export class Paper {
@@ -37,20 +34,17 @@ export class Paper {
   readonly kind = "Paper"
 
   toJSON(): PaperJSON {
-    return {
-      kind: "Paper",
-    }
+    // @ts-ignore
+    return 2
   }
 
   toEncodable() {
-    return {
-      Paper: {},
-    }
+    return 2
   }
 }
 
 export interface ScissorsJSON {
-  kind: "Scissors"
+  kind: 3
 }
 
 export class Scissors {
@@ -60,14 +54,80 @@ export class Scissors {
   readonly kind = "Scissors"
 
   toJSON(): ScissorsJSON {
+    // @ts-ignore
+    return 3
+  }
+
+  toEncodable() {
+    return 3
+  }
+}
+
+export interface Flag1JSON {
+  kind: "Flag1"
+}
+
+export class Flag1 {
+  static readonly discriminator = 3
+  static readonly kind = "Flag1"
+  readonly discriminator = 3
+  readonly kind = "Flag1"
+
+  toJSON(): Flag1JSON {
     return {
-      kind: "Scissors",
+      kind: "Flag1",
     }
   }
 
   toEncodable() {
     return {
-      Scissors: {},
+      Flag1: {},
+    }
+  }
+}
+
+export interface Flag2JSON {
+  kind: "Flag2"
+}
+
+export class Flag2 {
+  static readonly discriminator = 4
+  static readonly kind = "Flag2"
+  readonly discriminator = 4
+  readonly kind = "Flag2"
+
+  toJSON(): Flag2JSON {
+    return {
+      kind: "Flag2",
+    }
+  }
+
+  toEncodable() {
+    return {
+      Flag2: {},
+    }
+  }
+}
+
+export interface Flag3JSON {
+  kind: "Flag3"
+}
+
+export class Flag3 {
+  static readonly discriminator = 5
+  static readonly kind = "Flag3"
+  readonly discriminator = 5
+  readonly kind = "Flag3"
+
+  toJSON(): Flag3JSON {
+    return {
+      kind: "Flag3",
+    }
+  }
+
+  toEncodable() {
+    return {
+      Flag3: {},
     }
   }
 }
@@ -76,7 +136,7 @@ export class Scissors {
 export function fromDecoded(obj: any): number {
   if (typeof obj !== "object") {
     throw new Error("Invalid enum object")
-  } 
+  }
 if (obj){
   if ("Rock" in obj) {
     return 1
@@ -87,25 +147,25 @@ if (obj){
   if ("Scissors" in obj) {
     return 3
   }
-}
-else {
+  if ("Flag1" in obj) {
+    return 4
+  }
+  if ("Flag2" in obj) {
+    return 5
+  }
+  if ("Flag3" in obj) {
+    return 6
+  }
+} else {
   return 0
 }
+
   throw new Error("Invalid enum object")
 }
 
-export function fromJSON(obj: types.TeamJSON): types.TeamKind {
-  switch (obj.kind) {
-    case "Rock": {
-      return new Rock()
-    }
-    case "Paper": {
-      return new Paper()
-    }
-    case "Scissors": {
-      return new Scissors()
-    }
-  }
+export function fromJSON(obj: types.TeamJSON): number {
+ 
+  return obj
 }
 
 export function layout(property?: string) {
@@ -113,6 +173,9 @@ export function layout(property?: string) {
     borsh.struct([], "Rock"),
     borsh.struct([], "Paper"),
     borsh.struct([], "Scissors"),
+    borsh.struct([], "Flag1"),
+    borsh.struct([], "Flag2"),
+    borsh.struct([], "Flag3"),
   ])
   if (property !== undefined) {
     return ret.replicate(property)

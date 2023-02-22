@@ -2,5 +2,17 @@ import * as Team from "./Team"
 
 export { Team }
 
-export type TeamKind = Team.Rock | Team.Paper | Team.Scissors
-export type TeamJSON = Team.RockJSON | Team.PaperJSON | Team.ScissorsJSON
+export type TeamKind =
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+export type TeamJSON =
+| 1
+| 2
+| 3
+| 4
+| 5
+| 6
