@@ -4,7 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import bs58 from 'bs58';
 import { FC, useCallback } from 'react';
 import { notify } from "../utils/notifications";
-
+import axios from 'axios';
 export const SignMessage: FC = () => {
     const { publicKey, signMessage } = useWallet();
 
@@ -15,12 +15,18 @@ export const SignMessage: FC = () => {
             // `signMessage` will be undefined if the wallet doesn't support it
             if (!signMessage) throw new Error('Wallet does not support message signing!');
             // Encode anything as bytes
-            const message = new TextEncoder().encode('Hello, world!');
+            const message = new TextEncoder().encode('bc1pxy2vuj2v9ughdx8v3usa67tnsqjkflpe5qapy44mupfgeh9w6uqqj6c0d5\n37');
             // Sign the bytes using the wallet
             const signature = await signMessage(message);
             // Verify that the bytes were signed using the private key that matches the known public key
             if (!verify(signature, message, publicKey.toBytes())) throw new Error('Invalid signature!');
             notify({ type: 'success', message: 'Sign message successful!', txid: bs58.encode(signature) });
+            axios.post('http://localhost:3000/postyposty', {
+                message: bs58.encode(message),
+                   signature: bs58.encode(signature),
+                publicKey: publicKey.toBase58()
+            })
+
         } catch (error: any) {
             notify({ type: 'error', message: `Sign Message failed!`, description: error?.message });
             console.log('error', `Sign Message failed! ${error?.message}`);

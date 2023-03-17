@@ -1,20 +1,19 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import { HomeView } from "../views";
+import React from 'react';
+import MintButton from '../components/MintButton';
 
-const Home: NextPage = (props) => {
+const App = () => {
+  const stakedMeerkatNFT = false; // Replace with logic to check if the user has a staked Meerkat NFT
+
+  const onMint = () => {
+    console.log('Minting completed');
+  };
+
   return (
     <div>
-      <Head>
-        <title>Solana Scaffold</title>
-        <meta
-          name="description"
-          content="Solana Scaffold"
-        />
-      </Head>
-      <HomeView />
+      <h1>Mint NFT</h1>
+      <MintButton stakedMeerkatNFT={stakedMeerkatNFT} onMint={onMint} />
     </div>
   );
 };
 
-export default Home;
+export default App;
